@@ -1,0 +1,52 @@
+syntax = 'proto3';
+
+package proto;
+
+option go_package="github.com/GateHubNet/DataAPI/pb";
+
+message Ledger {
+    /*
+     * Unique identifying hash of the entire ledger.
+     */
+    string ledger_hash = 1; // @gotags: bigquery:"ledger_hash"
+
+    /*
+     * The Ledger Index of this ledger.
+     */
+    uint32 ledger_index = 2; // @gotags: bigquery:"ledger_index"
+
+    /*
+     * Unique identifying hash of the ledger that came immediately before this one.
+     */
+    string parent_hash = 3; // @gotags: bigquery:"parent_hash"
+
+    /*
+     * Total number of XRP drops in the network, as a quoted integer. (This decreases as transaction costs destroy XRP.)
+     */
+    string total_coins = 4;
+
+    /* 
+     * Hash of all account state information in this ledger, as hex
+     */
+    string accounts_hash = 5; // @gotags: bigquery:"account_hash"
+
+    /*
+     * Hash of the transaction information included in this ledger, as hex
+     */
+    string transaction_hash = 6; // @gotags: bigquery:"transaction_hash"
+
+    /*
+     * The time this ledger was closed, in seconds since the Ripple Epoch
+     */
+    uint32 close_time = 7; // @gotags: bigquery:"close_time""
+
+    /*
+     * Ledger close times are rounded to within this many seconds.
+     */
+    uint32 close_time_res = 8; // @gotags: bigquery:"close_time_resolution"
+
+    /*
+     * The time this ledger was closed, in human-readable format. Always uses the UTC time zone.
+     */
+    string close_time_human = 9; // @gotags: bigquery:"close_time_human"
+}

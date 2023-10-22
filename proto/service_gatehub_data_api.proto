@@ -1,0 +1,66 @@
+syntax = 'proto3';
+
+package proto;
+
+option go_package="github.com/GateHubNet/DataAPI/pb";
+
+import "rpc_get_ledger.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+    info: {
+        title: "GateHub Data API";
+        version: "1.0";
+        description: "The GateHub Data API provides access to information about changes in the XRP Ledger, including transaction history and processed analytical data.";
+        contact: {
+            name: "GateHub Limited";
+            url: "https://gatehub.net";
+            email: "info@gatehub.net";
+        };
+    };
+    base_path: "localhost:8080"
+    schemes: HTTPS;
+    schemes: WSS;
+    consumes: "application/json";
+    produces: "application/json";
+};
+
+service GateHubDataAPI {
+    rpc GetLastValidatedLedger(GetLastValidatedLedgerRequest) returns (GetLedgerResponse) {
+        option (google.api.http) = {
+            get: "/v2/ledgers",
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Get last validated ledger.";
+            operation_id: "getLastValidatedLedger";
+            tags: "GateHubDataAPI"
+            tags: "ledger";
+            responses: {
+                key: "200"
+                value: {
+                    description: "OK";
+                }
+            }
+        };
+    }
+
+    rpc GetLedger(GetLedgerRequest) returns (GetLedgerResponse) {
+        option (google.api.http) = {
+            get: "/v2/ledgers/{identifier}"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Get ledger by identifier.";
+            operation_id: "getLedger";
+            tags: "ledger";
+            responses: {
+                key: "200"
+                value: {
+                    description: "OK";
+                }
+            }
+        };
+    }
+}

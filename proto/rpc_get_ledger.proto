@@ -1,0 +1,70 @@
+syntax = 'proto3';
+
+package proto;
+
+option go_package="github.com/GateHubNet/DataAPI/pb";
+
+import "ledger.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+message GetLastValidatedLedgerRequest {
+    /*
+     * (Optional) If true, include the identifying hashes of all transactions that are part of this ledger.
+     */
+     optional bool transactions = 1;
+
+     /*
+      * (Optional) If true, include all transactions from this ledger as hex-formatted binary data. (If provided, overrides transactions.)
+      */
+     optional bool binary = 2;
+ 
+     /*
+      * (Optional) If true, include all transactions from this ledger as nested JSON objects. (If provided, overrides binary and transactions.)
+      */
+     optional bool expand = 3;
+}
+
+message GetLedgerRequest {
+    /* An identifier for the ledger to retrieve: 
+     * either the full hash in hex, an integer sequence number, 
+     * or a date-time. If a date-time is provided, retrieve the ledger 
+     * that was most recently closed at that time. If omitted, 
+     * retrieve the latest validated ledger.
+    */
+    string identifier = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+        min_length: 1,
+        field_configuration: {path_param_name: "identifier"},
+    }];
+
+    /*
+     * (Optional) If true, include the identifying hashes of all transactions that are part of this ledger.
+     */
+    optional bool transactions = 2;
+
+    /*
+     * (Optional) If true, include all transactions from this ledger as hex-formatted binary data. (If provided, overrides transactions.)
+     */
+    optional bool binary = 3;
+
+    /*
+     * (Optional) If true, include all transactions from this ledger as nested JSON objects. (If provided, overrides binary and transactions.)
+     */
+    optional bool expand = 4;
+}
+
+message GetLedgerResponse {
+    /*
+     * The value success indicates that this is a successful response.
+     */
+    string result = 1;
+
+    /*
+     * The requested ledger.
+     */
+    optional Ledger ledger = 2;
+
+    /*
+     * In case of error, message will return information about the error
+     */
+    optional string message = 3;
+}
