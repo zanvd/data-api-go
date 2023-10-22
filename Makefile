@@ -12,7 +12,8 @@ init:
 .PHONY: proto
 # generate proto files
 proto:
-	rm -rf pb/* doc/swagger/* && \
+	rm -rf pb doc/swagger && \
+	mkdir pb && mkdir -p doc/swagger && \
 	protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
     --go-grpc_out=pb --go-grpc_opt=paths=source_relative \
 	--grpc-gateway_out=pb --grpc-gateway_opt=paths=source_relative \
