@@ -1,0 +1,2 @@
+doc/swagger/*
+./pb/*.pb.go
