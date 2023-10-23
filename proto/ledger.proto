@@ -1,4 +1,26 @@
-syntax = 'proto3';
+// The MIT License (MIT)
+
+// Copyright (c) 2023 GateHub Limited
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+syntax = "proto3";
 
 package proto;
 
@@ -8,45 +30,45 @@ message Ledger {
     /*
      * Unique identifying hash of the entire ledger.
      */
-    string ledger_hash = 1; // @gotags: bigquery:"ledger_hash"
+    string ledger_hash = 1 [json_name='ledger_hash']; // @gotags: bigquery:"ledger_hash"
 
     /*
      * The Ledger Index of this ledger.
      */
-    uint32 ledger_index = 2; // @gotags: bigquery:"ledger_index"
+    uint32 ledger_index = 2 [json_name='ledger_index']; // @gotags: bigquery:"ledger_index"
 
     /*
      * Unique identifying hash of the ledger that came immediately before this one.
      */
-    string parent_hash = 3; // @gotags: bigquery:"parent_hash"
+    string parent_hash = 3 [json_name='parent_hash']; // @gotags: bigquery:"parent_hash"
 
     /*
      * Total number of XRP drops in the network, as a quoted integer. (This decreases as transaction costs destroy XRP.)
      */
-    string total_coins = 4;
+    string total_coins = 4 [json_name='total_coins'];
 
     /* 
      * Hash of all account state information in this ledger, as hex
      */
-    string accounts_hash = 5; // @gotags: bigquery:"account_hash"
+    string accounts_hash = 5 [json_name='accounts_hash']; // @gotags: bigquery:"account_hash"
 
     /*
      * Hash of the transaction information included in this ledger, as hex
      */
-    string transaction_hash = 6; // @gotags: bigquery:"transaction_hash"
+    string transaction_hash = 6 [json_name='transaction_hash']; // @gotags: bigquery:"transaction_hash"
 
     /*
      * The time this ledger was closed, in seconds since the Ripple Epoch
      */
-    uint32 close_time = 7; // @gotags: bigquery:"close_time""
+    uint32 close_time = 7 [json_name='close_time']; // @gotags: bigquery:"close_time""
 
     /*
      * Ledger close times are rounded to within this many seconds.
      */
-    uint32 close_time_res = 8; // @gotags: bigquery:"close_time_resolution"
+    uint32 close_time_res = 8 [json_name='close_time_res']; // @gotags: bigquery:"close_time_resolution"
 
     /*
      * The time this ledger was closed, in human-readable format. Always uses the UTC time zone.
      */
-    string close_time_human = 9; // @gotags: bigquery:"close_time_human"
+    string close_time_human = 9 [json_name='close_time_human']; // @gotags: bigquery:"close_time_human"
 }
