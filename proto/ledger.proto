@@ -26,49 +26,68 @@ package proto;
 
 option go_package="github.com/GateHubNet/DataAPI/pb";
 
-message Ledger {
-    /*
-     * Unique identifying hash of the entire ledger.
-     */
-    string ledger_hash = 1 [json_name='ledger_hash']; // @gotags: bigquery:"ledger_hash"
+import "google/protobuf/any.proto";
 
+message Ledger {
     /*
      * The Ledger Index of this ledger.
      */
-    uint32 ledger_index = 2 [json_name='ledger_index']; // @gotags: bigquery:"ledger_index"
+    int64 ledger_index = 1 [json_name='ledger_index']; // @gotags: cql:"ledger_index" redis:"ledger_index"
 
     /*
-     * Unique identifying hash of the ledger that came immediately before this one.
-     */
-    string parent_hash = 3 [json_name='parent_hash']; // @gotags: bigquery:"parent_hash"
-
-    /*
-     * Total number of XRP drops in the network, as a quoted integer. (This decreases as transaction costs destroy XRP.)
-     */
-    string total_coins = 4 [json_name='total_coins'];
-
-    /* 
      * Hash of all account state information in this ledger, as hex
      */
-    string accounts_hash = 5 [json_name='accounts_hash']; // @gotags: bigquery:"account_hash"
+    string account_hash = 2 [json_name='account_hash']; // @gotags: cql:"account_hash" redis:"account_hash""
 
     /*
-     * Hash of the transaction information included in this ledger, as hex
+     * A bit-map of flags relating to the closing of this ledger.
      */
-    string transaction_hash = 6 [json_name='transaction_hash']; // @gotags: bigquery:"transaction_hash"
+    uint32 close_flags = 3 [json_name='close_flags']; // @gotags: cql:"close_flags" redis:"close_flags"
 
     /*
      * The time this ledger was closed, in seconds since the Ripple Epoch
      */
-    uint32 close_time = 7 [json_name='close_time']; // @gotags: bigquery:"close_time""
+    int64 close_time = 4 [json_name='close_time']; // @gotags: cql:"close_time" redis:"close_time"
 
     /*
-     * Ledger close times are rounded to within this many seconds.
+     * Unique identifying hash of the entire ledger.
      */
-    uint32 close_time_res = 8 [json_name='close_time_res']; // @gotags: bigquery:"close_time_resolution"
+    string ledger_hash = 5 [json_name='ledger_hash']; // @gotags: cql:"ledger_hash" redis:"ledger_hash"
 
     /*
-     * The time this ledger was closed, in human-readable format. Always uses the UTC time zone.
+     * Boolean value that represents if this ledger has already been processed or not
      */
-    string close_time_human = 9 [json_name='close_time_human']; // @gotags: bigquery:"close_time_human"
+    bool ledger_processed = 6 [json_name='ledger_processed']; // @gotags: cql:"ledger_processed" redis:"ledger_processed"
+
+    /*
+     * The time at which the previous ledger was closed.
+     */
+    int64 parent_close_time = 7 [json_name='parent_close_time']; // @gotags: cql:"parent_close_time" redis:"parent_close_time"
+
+    /*
+     * Unique identifying hash of the ledger that came immediately before this one.
+     */
+    string parent_hash = 8 [json_name='parent_hash']; // @gotags: cql:"parent_hash" redis:"parent_hash"
+
+    /*
+     * Total number of XRP drops in the network, as a quoted integer. (This decreases as transaction costs destroy XRP.)
+     */
+    string total_coins = 9 [json_name='total_coins']; // @gotags: cql:"total_coins" redis:"total_coins"
+
+    /*
+     * Hash of the transaction information included in this ledger, as hex
+     */
+    string transaction_hash = 10 [json_name='transaction_hash']; // @gotags: cql:"transaction_hash" redis:"transaction_hash"
+
+    /*
+     * Total number of transactions in this ledger.
+     */
+    uint32 tx_count = 11 [json_name='tx_count']; // @gotags: cql:"tx_count" redis:"tx_count"
+
+    repeated google.protobuf.Any transactions = 12 [json_name='transactions'];
+
+    /*
+     * Reserved for future use
+     */
+    reserved 13 to 99;
 }

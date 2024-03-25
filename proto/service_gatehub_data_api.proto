@@ -25,6 +25,7 @@ syntax = "proto3";
 package proto;
 
 import "rpc_get_ledger.proto";
+import "rpc_get_transaction.proto";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
@@ -81,6 +82,24 @@ service GateHubDataAPI {
                 key: "200"
                 value: {
                     description: "OK";
+                }
+            }
+        };
+    }
+
+    rpc GetTransaction(GetTransactionRequest) returns (GetTransactionResponse) {
+        option (google.api.http) = {
+            get: "/v2/transactions/{hash}"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Get transaction by hash.";
+            operation_id: "getTransactionByHash";
+            tags: "transaction";
+            responses: {
+                key: "200"
+                value: {
+                    description: "OK"
                 }
             }
         };

@@ -55,13 +55,16 @@ message GetLedgerRequest {
     */
     string identifier = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
         min_length: 1,
-        field_configuration: {path_param_name: "identifier"},
+        field_configuration: {
+          path_param_name: "identifier",
+        },
     }];
 
     /*
      * (Optional) If true, include the identifying hashes of all transactions that are part of this ledger.
      */
-    optional bool transactions = 2;
+    optional bool transactions = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    }];
 
     /*
      * (Optional) If true, include all transactions from this ledger as hex-formatted binary data. (If provided, overrides transactions.)

@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"google.golang.org/protobuf/proto"
 	"net"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/GateHubNet/DataAPI/gapi"
 	"github.com/GateHubNet/DataAPI/pb"
@@ -15,6 +17,27 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
+
+func httpResponseModifier(ctx context.Context, w http.ResponseWriter, p proto.Message) error {
+	md, ok := runtime.ServerMetadataFromContext(ctx)
+	if !ok {
+		return nil
+	}
+
+	// set http status code
+	if vals := md.HeaderMD.Get("x-http-code"); len(vals) > 0 {
+		code, err := strconv.Atoi(vals[0])
+		if err != nil {
+			return err
+		}
+		// delete the headers to not expose any grpc-metadata in http response
+		delete(md.HeaderMD, "x-http-code")
+		delete(w.Header(), "Grpc-Metadata-X-Http-Code")
+		w.WriteHeader(code)
+	}
+
+	return nil
+}
 
 func main() {
 	config, err := util.LoadConfig(".")
@@ -36,9 +59,9 @@ func runGrpcServer(config util.Config) {
 		log.Fatal().Err(err).Msg("cannot create server")
 	}
 
-	// lets here defer BQ connection to be closed
-	// this means that we have one connection per server...not really 100% sure that this is ok
 	defer server.Store.Close()
+	//TODO: handle error ... this actually doesnt matter because if this functions ends, server should also end
+	defer server.Cache.Close()
 
 	grpcLogger := grpc.UnaryInterceptor(gapi.GrpcLogger)
 	grpcServer := grpc.NewServer(grpcLogger)
@@ -63,12 +86,12 @@ func runGatewayServer(config util.Config) {
 		log.Fatal().Err(err).Msg("cannot create server")
 	}
 
-	// lets here defer BQ connection to be closed
-	// this means that we have one connection per server...not really 100% sure that this is ok
-	// we createt different connection for gRPC and different for HTTP
 	defer server.Store.Close()
+	//TODO: handle error ... this actually doesnt matter because if this functions ends, server should also end
+	defer server.Cache.Close()
 
-	grpcMux := runtime.NewServeMux()
+	grpcMux := runtime.NewServeMux(runtime.WithForwardResponseOption(httpResponseModifier))
+
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 

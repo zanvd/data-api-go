@@ -7,12 +7,15 @@ import (
 // Config stores all configuration of the application.
 // The values are read by viper from a config file or environment variable.
 type Config struct {
-	Environment             string `mapstructure:"ENVIRONMENT"`
-	HTTPServerAddress       string `mapstructure:"HTTP_SERVER_ADDRESS"`
-	GRPCServerAddress       string `mapstructure:"GRPC_SERVER_ADDRESS"`
-	GCPBigQueryProjectId    string `mapstructure:"GCP_BIG_QUERY_PROJECT_ID"`
-	GCPBigQueryLedgersTable string `mapstructure:"GCP_BIG_QUERY_LEDGERS_TABLE"`
-	GCPBigQueryDataSet      string `mapstructure:"GCP_BIG_QUERY_DATASET"`
+	Environment       string `mapstructure:"ENVIRONMENT"`
+	HTTPServerAddress string `mapstructure:"HTTP_SERVER_ADDRESS"`
+	GRPCServerAddress string `mapstructure:"GRPC_SERVER_ADDRESS"`
+	ScyllaKeyspace    string `mapstructure:"SCYLLA_KEYSPACE"`
+	ScyllaHosts       string `mapstructure:"SCYLLA_HOSTS"`
+	ScyllaPort        string `mapstructure:"SCYLLA_PORT"`
+	RedisAddress      string `mapstructure:"REDIS_ADDRESS"`
+	RedisPassword     string `mapstructure:"REDIS_PASSWORD"`
+	RedisDatabase     string `mapstructure:"REDIS_DATABASE"`
 }
 
 // LoadConfig reads configuration from file or environment variables.

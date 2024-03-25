@@ -1,0 +1,64 @@
+// The MIT License (MIT)
+
+// Copyright (c) 2023 GateHub Limited
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+syntax = "proto3";
+
+package proto;
+
+option go_package="github.com/GateHubNet/DataAPI/pb";
+
+import "transaction.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+message GetTransactionRequest {
+  /*
+   * The identifying hash of the transaction.
+   */
+  string hash = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+    min_length: 1,
+    field_configuration: {
+      path_param_name: "hash",
+    },
+  }];
+
+  /*
+   * (Optional) If true, return transaction data in binary format, as a hex string. Otherwise, return transaction data as nested JSON. The default is false.
+   */
+  optional bool binary = 2;
+}
+
+message GetTransactionResponse {
+  /*
+   * The value success indicates that this is a successful response.
+   */
+  string result = 1;
+
+  /*
+   * The requested ledger.
+   */
+  optional Transaction transaction = 2;
+
+  /*
+   * In case of error, message will return information about the error
+   */
+  optional string message = 3;
+}
