@@ -2,15 +2,16 @@ package main
 
 import (
 	"context"
-	"google.golang.org/protobuf/proto"
 	"net"
 	"net/http"
 	"os"
 	"strconv"
 
-	"github.com/GateHubNet/DataAPI/gapi"
-	"github.com/GateHubNet/DataAPI/pb"
-	"github.com/GateHubNet/DataAPI/util"
+	"google.golang.org/protobuf/proto"
+
+	"github.com/GateHubNet/data-api-go/gapi"
+	"github.com/GateHubNet/data-api-go/pb"
+	"github.com/GateHubNet/data-api-go/util"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
