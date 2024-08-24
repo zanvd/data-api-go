@@ -4,17 +4,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/GateHubNet/DataAPI/models"
-	"github.com/GateHubNet/DataAPI/pb"
-	"github.com/GateHubNet/DataAPI/util"
+	"strconv"
+	"time"
+
+	"github.com/GateHubNet/data-api-go/models"
+	"github.com/GateHubNet/data-api-go/pb"
+	"github.com/GateHubNet/data-api-go/util"
 	"github.com/rs/zerolog/log"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/known/anypb"
-	"strconv"
-	"time"
 )
 
 func (server *Server) getLedgerByIndex(ledgerIndex int64) (*pb.Ledger, error) {
@@ -221,20 +221,35 @@ func (server *Server) GetLedger(ctx context.Context, req *pb.GetLedgerRequest) (
 	if req.GetExpand() {
 
 	} else if req.GetBinary() {
+		transactions, err := server.GetTransactionsByLedgerIndex(ledger.LedgerIndex)
 
+		if err != nil {
+			log.Warn().Err(err).Msg("Failed to get transactions")
+		} else {
+			var transactionHashes []string
+			for _, tx := range transactions {
+				transactionHashes = append(transactionHashes, tx.Tx)
+			}
+			ledger.Transactions = &pb.Ledger_TransactionHashes{
+				TransactionHashes: &pb.HashList{
+					Hashes: transactionHashes,
+				},
+			}
+		}
 	} else if req.GetTransactions() {
 		transactions, err := server.GetTransactionsByLedgerIndex(ledger.LedgerIndex)
 
 		if err != nil {
 			log.Warn().Err(err).Msg("Failed to get transactions")
 		} else {
+			var transactionHashes []string
 			for _, tx := range transactions {
-				txAny, err := anypb.New(&tx)
-				if err != nil {
-					// Handle error
-				}
-
-				ledger.Transactions = append(ledger.Transactions, txAny)
+				transactionHashes = append(transactionHashes, tx.Hash)
+			}
+			ledger.Transactions = &pb.Ledger_TransactionHashes{
+				TransactionHashes: &pb.HashList{
+					Hashes: transactionHashes,
+				},
 			}
 		}
 	}
