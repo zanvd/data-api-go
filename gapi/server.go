@@ -1,14 +1,16 @@
 package gapi
 
 import (
-	"github.com/GateHubNet/DataAPI/pb"
-	"github.com/GateHubNet/DataAPI/util"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/GateHubNet/data-api-go/pb"
+	"github.com/GateHubNet/data-api-go/util"
 	"github.com/go-redis/redis"
 	"github.com/gocql/gocql"
 	"github.com/rs/zerolog/log"
 	"github.com/scylladb/gocqlx/v2"
-	"strconv"
-	"strings"
 )
 
 // Server serves gRPC requests for our GateHub Data Api service.
@@ -16,7 +18,7 @@ type Server struct {
 	pb.UnimplementedGateHubDataAPIServer
 	config util.Config
 	Store  gocqlx.Session
-	Cache  *redis.Client
+	Cache  *redis.ClusterClient
 
 	ledgerCacheKey string
 }
@@ -33,18 +35,16 @@ func NewServer(config util.Config) (*Server, error) {
 	cluster := gocql.NewCluster(scyllaHosts...)
 	cluster.Keyspace = config.ScyllaKeyspace
 	cluster.Port = parsedScyllaPort
-
+	cluster.Timeout = 10 * time.Second
 	session, err := gocqlx.WrapSession(cluster.CreateSession())
 	if err != nil {
 		log.Fatal().Err(err).Msg("Cannot create ScyllaDB session")
 	}
 
-	redisDatabase, _ := strconv.Atoi(config.RedisDatabase)
-
-	cache := redis.NewClient(&redis.Options{
-		Addr:     config.RedisAddress,
-		Password: config.RedisPassword,
-		DB:       redisDatabase,
+	cache := redis.NewClusterClient(&redis.ClusterOptions{
+		Addrs:          []string{config.RedisAddress},
+		Password:       config.RedisPassword,
+		RouteByLatency: true,
 	})
 
 	server := &Server{
