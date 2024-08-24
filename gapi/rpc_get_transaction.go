@@ -2,8 +2,9 @@ package gapi
 
 import (
 	"context"
-	"github.com/GateHubNet/DataAPI/models"
-	"github.com/GateHubNet/DataAPI/pb"
+
+	"github.com/GateHubNet/data-api-go/models"
+	"github.com/GateHubNet/data-api-go/pb"
 	"github.com/rs/zerolog/log"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"google.golang.org/grpc/codes"
