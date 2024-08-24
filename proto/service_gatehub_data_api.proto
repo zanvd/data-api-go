@@ -26,10 +26,11 @@ package proto;
 
 import "rpc_get_ledger.proto";
 import "rpc_get_transaction.proto";
+import "rpc_get_balance_changes.proto";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-option go_package="github.com/GateHubNet/DataAPI/pb";
+option go_package="github.com/GateHubNet/data-api-go/pb";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     info: {
@@ -100,6 +101,24 @@ service GateHubDataAPI {
                 key: "200"
                 value: {
                     description: "OK"
+                }
+            }
+        };
+    }
+
+    rpc GetAccountBalanceChanges(GetAccountBalanceChangesRequest) returns (GetAccountBalanceChangesResponse) {
+        option (google.api.http) = {
+            get: "/v2/accounts/{address}/balance_changes"
+        };
+
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Retrieve Balance changes for a given account over time.";
+            operation_id: "getAccountBalanceChanges";
+            tags: "accounts";
+            responses: {
+                key: "200"
+                value: {
+                    description: "OK";
                 }
             }
         };

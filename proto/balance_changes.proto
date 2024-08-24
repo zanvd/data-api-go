@@ -26,19 +26,30 @@ package proto;
 
 option go_package="github.com/GateHubNet/data-api-go/pb";
 
-message DailyLedger {
-  /*
-   * Day when this ledger was closed. YYYY-mm-dd format
-   */
-  string ledger_close_day = 1 [json_name='ledger_close_day']; //@gotags: cql:"ledger_close_day"
-
+message BalanceChanges {
   /*
    * The Ledger Index of this ledger.
    */
-  int64 ledger_index = 2 [json_name='ledger_index']; // @gotags: cql:"ledger_index"
+  int64 ledger_index = 1 [json_name='ledger_index']; // @gotags: cql:"ledger_index" redis:"ledger_index"
 
-  /*
-   * The time this ledger was closed, in seconds since the Ripple Epoch
-   */
-  int64 close_time = 3 [json_name='close_time']; // @gotags: cql:"close_time"
+  int32 tx_index = 2 [json_name='tx_index']; // @gotags: cql:"tx_index" redis:"tx_index"
+
+  int32 node_index = 3 [json_name='node_index']; // @gotags: cql:"node_index" redis:"node_index"
+
+  string account = 4 [json_name='account']; // @gotags: cql:"account" redis:"account"
+
+  string change = 5 [json_name='change']; // @gotags: cql:"change" redis:"change"
+
+  string change_type = 6 [json_name='change_type']; // @gotags: cql:"change_type" redis:"change_type"
+
+  string counterparty = 7 [json_name='counterparty']; // @gotags: cql:"counterparty" redis:"counterparty"
+
+  string currency = 8 [json_name='currency']; // @gotags: cql:"currency" redis:"currency"
+
+  string final_balance = 9 [json_name='final_balance']; // @gotags: cql:"final_balance" redis:"final_balance"
+
+  int64 timestamp = 10 [json_name='timestamp']; // @gotags: cql:"timestamp" redis:"timestamp"
+
+  string tx_hash = 11 [json_name='tx_hash']; // @gotags: cql:"tx_hash" redis:"tx_hash"
+
 }

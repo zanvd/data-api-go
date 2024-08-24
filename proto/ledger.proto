@@ -24,9 +24,10 @@ syntax = "proto3";
 
 package proto;
 
-option go_package="github.com/GateHubNet/DataAPI/pb";
+option go_package="github.com/GateHubNet/data-api-go/pb";
 
-import "google/protobuf/any.proto";
+//import "google/protobuf/any.proto";
+import "transaction.proto";
 
 message Ledger {
     /*
@@ -79,15 +80,28 @@ message Ledger {
      */
     string transaction_hash = 10 [json_name='transaction_hash']; // @gotags: cql:"transaction_hash" redis:"transaction_hash"
 
+    string close_day = 11 [json_name='close_day']; // @gotags: cql:"close_day" redis:"close_day"
+
     /*
      * Total number of transactions in this ledger.
      */
-    uint32 tx_count = 11 [json_name='tx_count']; // @gotags: cql:"tx_count" redis:"tx_count"
+    uint32 tx_count = 12 [json_name='tx_count']; // @gotags: cql:"tx_count" redis:"tx_count"
 
-    repeated google.protobuf.Any transactions = 12 [json_name='transactions'];
+    oneof transactions {
+        HashList transaction_hashes = 13;
+        TransactionList expanded_transactions = 14;
+    }
 
     /*
      * Reserved for future use
      */
-    reserved 13 to 99;
+    reserved 15 to 99;
+}
+
+message HashList {
+    repeated string hashes = 1;
+}
+
+message TransactionList {
+    repeated Transaction transactions = 1;
 }

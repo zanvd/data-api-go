@@ -24,7 +24,7 @@ syntax = "proto3";
 
 package proto;
 
-option go_package="github.com/GateHubNet/DataAPI/pb";
+option go_package="github.com/GateHubNet/data-api-go/pb";
 
 message Transaction {
   /*
@@ -44,13 +44,15 @@ message Transaction {
 
   int32 fee = 7 [json_name='fee']; // @gotags: cql:"fee" redis:"fee"
 
-  string hash = 8 [json_name='hash']; // @gotags: cql:"hash" redis:"hash"
+  uint64 flags = 8 [json_name='flags']; // @gotags: cql:"flags" redis:"flags"
 
-  string meta = 9 [json_name='meta']; // @gotags: cql:"hash" redis:"hash"
+  string hash = 9 [json_name='hash']; // @gotags: cql:"hash" redis:"hash"
 
-  uint32 result = 10 [json_name='result']; // @gotags: cql:"result" redis:"result"
+  string meta = 10 [json_name='meta']; // @gotags: cql:"hash" redis:"hash"
 
-  int64 timestamp = 11 [json_name='timestamp']; // @gotags: cql:"timestamp" redis:"timestamp"
+  uint32 result = 11 [json_name='result']; // @gotags: cql:"result" redis:"result"
 
-  string tx = 12 [json_name='tx']; // @gotags: cql:"tx" redis:"tx"
+  int64 timestamp = 12 [json_name='timestamp']; // @gotags: cql:"timestamp" redis:"timestamp"
+
+  string tx = 13 [json_name='tx']; // @gotags: cql:"tx" redis:"tx"
 }

@@ -26,39 +26,78 @@ package proto;
 
 option go_package="github.com/GateHubNet/data-api-go/pb";
 
-import "transaction.proto";
+import "balance_changes.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-message GetTransactionRequest {
+message GetAccountBalanceChangesRequest {
   /*
-   * The identifying hash of the transaction.
+   * XRP Ledger address to query
    */
-  string hash = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+  string address = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
     min_length: 1,
     field_configuration: {
-      path_param_name: "hash",
+      path_param_name: "address",
     },
   }];
 
   /*
-   * (Optional) If true, return transaction data in binary format, as a hex string. Otherwise, return transaction data as nested JSON. The default is false.
+   * (Optional) Restrict results to specified currency.
    */
-  optional bool binary = 2;
+  optional string currency = 2;
+
+  /*
+   * (Optional) Restrict results to specified counterparty / issuer.
+   */
+  optional string counterparty = 3;
+
+  /*
+   * (Optional) Start time of query range.
+   */
+  optional string start = 4;
+
+  /*
+   * (Optional) End time of query range.
+   */
+  optional string end = 5;
+
+  /*
+   * (Optional) If true, return results in reverse chronological order.
+   * The default is false
+   */
+  optional bool descending = 6;
+
+  /*
+   * (Optional) Maximum results per page. The default is 200.
+   * Cannot be more than 1000.
+   */
+  optional uint32 limit = 7;
+
+  /*
+   * (Optional) Pagination key from previously returned response.
+   */
+  optional string marker = 8;
+
+  reserved 9; // for example for format
 }
 
-message GetTransactionResponse {
+message GetAccountBalanceChangesResponse {
   /*
    * The value success indicates that this is a successful response.
    */
   string result = 1;
 
   /*
-   * The requested ledger.
+   * Number of balance changes returned.
    */
-  optional Transaction transaction = 2;
+  uint64 counter = 2;
 
   /*
-   * In case of error, message will return information about the error
+   * (May be omitted) Pagination marker
    */
-  optional string message = 3;
+  optional string marker = 3;
+
+  /*
+   * The requested balance changes
+   */
+  repeated BalanceChanges balance_changes = 4;
 }
